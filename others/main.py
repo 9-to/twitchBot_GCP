@@ -144,8 +144,10 @@ def index():
     user_id = body['subscription']['condition']['broadcaster_user_id']
     events = body.get('event')
     r = getStreams(keys['client_id'],keys['OAuth'],'user_id='+user_id)
-    print(r)
-    sendDiscord(r.get('data'))
+    r_list = r.get('data')
+    print(r_list)
+    if len(r_list) == 1:
+        sendDiscord(r_list[0])
     return Response(response=body['challenge'],headers={'content-type':'text/plain'}, status=200)
 
 app.run(debug=True,port=8080)
