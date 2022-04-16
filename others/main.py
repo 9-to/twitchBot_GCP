@@ -115,7 +115,7 @@ def index():
     # 1. リクエストからヘッダとボディを取得する
     headers = request.headers
     body = request.json
-    print(headers)
+    #print(headers)
     print(body)
     # 2. データベースを初期化する
     db = initializeFirestore()
@@ -132,7 +132,7 @@ def index():
         authKey = generateToken(keys['client_id'], keys['client_secret'])
         storeToken(authKey,db)
     # 5. サブスクライブのバージョンを確認する
-    TWversion = headers.get('Twitch-Eventsub-Subscription-Version')
+    TWversion = headers.get('Twitch-Eventsub-Message-Type')
     if TWversion == 'te':
         return Response(response=body['challenge'],headers={'content-type':'text/plain'}, status=201)
     elif TWversion == 'revocation':
@@ -148,7 +148,7 @@ def index():
     print(r_list)
     if len(r_list) == 1:
         sendDiscord(r_list[0])
-    return Response(response=body['challenge'],headers={'content-type':'text/plain'}, status=200)
+    return Response(headers={'content-type':'text/plain'}, status=200)
 
 app.run(debug=True,port=8080)
 
