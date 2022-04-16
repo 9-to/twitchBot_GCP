@@ -123,7 +123,7 @@ def index():
     TWsignature = headers.get('Twitch-Eventsub-Message-Signature')
     message = getHmacMessage(request)
     keys = getToken(db)#FireStoreから鍵を受け取る
-    EXsignature = hmac.new(bytearray(keys['sub_secret'], "ASCII"), bytearray(message, "ASCII"), hashlib.sha256).hexdigest()
+    EXsignature = hmac.new(keys['sub_secret'].decode('utf-8'), message.decode('utf-8'), hashlib.sha256).hexdigest()
     if isVaildSignature(TWsignature,"sha256="+EXsignature) == False :
         return Response(response=body['challenge'],headers={'content-type':'text/plain'}, status=500)
     # 4. OAuthが生きているか確認する
@@ -143,7 +143,7 @@ def index():
     # B. notificationの場合--情報を収集する
     user_id = body['subscription']['condition']['broadcaster_user_id']
     events = body.get('event')
-    r = getStreams(keys['client_id'],keys['OAuth'],'user_id='+user_id)
+    r = getStreams(keys['client_id'],keys['OAuth'],'user_id='+'126482446')
     r_list = r.get('data')
     print(r_list)
     if len(r_list) == 1:
